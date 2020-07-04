@@ -7,7 +7,10 @@ import requests
 import json
 import steam.webauth as wa
 import steam.steamid as sid
-import steam.util.web as sweb
+try:
+  import steam.util.web as sweb
+except ModuleNotFoundError: # Version 1.0 has steam.utils
+  import steam.utils.web as sweb
 from collections import OrderedDict
 from io import StringIO
 import lxml.html
