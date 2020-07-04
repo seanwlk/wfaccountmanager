@@ -357,7 +357,7 @@ class WFAccountManager:
     if isJson:
       return self.session.get(url,headers=headers,data=data).json()
     return self.session.get(url,headers=headers,data=data).text
-  def post(self,url,headers=None,data=None,isJson=True):
+  def post(self,url, headers=None, data=None, isJson: bool = True):
     """
     Method that allows custom links to bet HTTP POST with user session
     It's possible to add headers , data and get html page instead of json by default
@@ -380,12 +380,12 @@ class WFAccountManager:
     Method that returns user crafting informations such as resources crates and craft items
     """
     return self.session.get(f'https://{self._baseUrl}/minigames/craft/api/user-info').json()
-  def startCraftCrate(self,chest_id):
+  def startCraftCrate(self, chest_id: int):
     """
     Method that starts the crafting crate opening
     """
     return self.session.post(f'https://{self._baseUrl}/minigames/craft/api/start',data={'chest_id':chest_id}).json()
-  def openCraftCrate(self,chest_id):
+  def openCraftCrate(self, chest_id: int):
     """
     Method that collects items from an opened crate
     """
