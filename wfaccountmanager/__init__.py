@@ -15,11 +15,17 @@ from collections import OrderedDict
 from io import StringIO
 import lxml.html
 
+class UnsupportedLogin(Exception):
+  pass
+
+class MissingSteamLoginData(Exception):
+  pass
+
 class WFAccountManager:
   def __init__(self,region,lang="en"):
     """
     - region: russia,west,steam
-    - lang: en,fr,cn,pl,de,ru
+    - lang: en,fr,cn,es,de,ru
     """
     self.session = requests.Session()
     self.lang = lang
@@ -27,8 +33,6 @@ class WFAccountManager:
     self.me = {'state': 'guest', 'user_id': None, 'email': '', 'username': '', 'territory': ''}
     self._baseUrl = ""
   def login(self,account=None,password=None,**kwargs):
-    class UnsupportedLogin(Exception):
-      pass
     def _west(account,password):
       """
       Warface West Login
@@ -290,8 +294,6 @@ class WFAccountManager:
     Aliased internal function for steam auth. If used with plain username and password
     returns dict with a status request for 2FA when required. Use <>.postSteam2FA() after
     """
-    class MissingSteamLoginData(Exception):
-      pass
     if account and password:
       if not 'sessionid' in self.session.cookies.get_dict():
         self.steamUser = wa.MobileWebAuth(account, password)
@@ -354,8 +356,7 @@ class WFAccountManager:
     """
     if isJson:
       return self.session.get(url,headers=headers,data=data).json()
-    else:
-      return self.session.get(url,headers=headers,data=data).text
+    return self.session.get(url,headers=headers,data=data).text
   def post(self,url,headers=None,data=None,isJson=True):
     """
     Method that allows custom links to bet HTTP POST with user session
@@ -363,8 +364,7 @@ class WFAccountManager:
     """
     if isJson:
       return self.session.post(url,headers=headers,data=data).json()
-    else:
-      return self.session.post(url,headers=headers,data=data).text
+    return self.session.post(url,headers=headers,data=data).text
   def user(self):
     """
     Get live data from /minigames/user/info instead of cached .me property

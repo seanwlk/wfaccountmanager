@@ -19,7 +19,7 @@ pip install git+https://github.com/seanwlk/wfaccountmanager # Live updated libra
 ## Usage
 
 Upon object declaration you have to specify the region you will use tha account from. At the current time the only one supported are `west`,`steam`,`russia`. 
-Then you can login with the credentials.
+Then you can login with the credentials. You can also specify `lang` parameter which by default is `en`.
 
 ```python
 from wfaccountmanager import WFAccountManager
@@ -114,8 +114,6 @@ wf.me
 ```
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
 
 ## License
 [GNU GPLv2](https://choosealicense.com/licenses/gpl-2.0/)
