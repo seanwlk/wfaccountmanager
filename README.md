@@ -221,7 +221,7 @@ wf.crafting.slotCount()
 
 Method that returns the list of items in the marketplace
 ```
-wf.marketplace.buy()
+wf.marketplace.list()
 ```
 - <>.marketplace.buy(entity_id, cost, type)
 
@@ -235,6 +235,18 @@ wf.marketplace.buy(612, 40, "inventory")
 Method that allows to sell in the marketplace. Arguments are available in <>.inventory.list()
 ```
 wf.marketplace.sell(612, 40)
+```
+- <>.marketplace.myOffers()
+
+Method that returns the list of items that the user is currently selling
+```
+wf.marketplace.myOffers()
+```
+- <>.marketplace.history()
+
+Method that returns the selling/buying history of the user
+```
+wf.marketplace.history()
 ```
 ### <>.chests
 - <>.chests.list()

@@ -471,6 +471,17 @@ class _MarketplaceManager:
       'cost': cost
     }
     return self.accountManager.post(f'https://{self.accountManager._baseUrl}/minigames/inventory/api/sale',data=data)
+  def myOffers(self):
+    """
+    Method that returns the list of items that the user is currently selling
+    """
+    return self.accountManager.get(f'https://{self.accountManager._baseUrl}/minigames/marketplace/api/user-items')['data']
+  def history(self):
+    """
+    Method that returns the selling/buying history of the user
+    """
+    return self.accountManager.get(f'https://{self.accountManager._baseUrl}/minigames/marketplace/api/history')['data']
+  
 
 class _ChestManager:
   def __init__(self, accountManager):
