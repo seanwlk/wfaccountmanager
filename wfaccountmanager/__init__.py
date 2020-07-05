@@ -359,18 +359,20 @@ class WFAccountManager:
     """
     Method that allows custom links to bet HTTP GET with user session
     It's possible to add headers , data and get html page instead of json by default
+    In the url given, the string $baseurl$ will be replaced with the current instance _baseUrl
     """
     if isJson:
-      return self.session.get(url,headers=headers,data=data).json()
-    return self.session.get(url,headers=headers,data=data).text
+      return self.session.get(url.replace("$baseurl$",self._baseUrl),headers=headers,data=data).json()
+    return self.session.get(url.replace("$baseurl$",self._baseUrl),headers=headers,data=data).text
   def post(self,url, headers=None, data=None, isJson: bool = True):
     """
     Method that allows custom links to bet HTTP POST with user session
     It's possible to add headers , data and get html page instead of json by default
+    In the url given, the string $baseurl$ will be replaced with the current instance _baseUrl
     """
     if isJson:
-      return self.session.post(url,headers=headers,data=data).json()
-    return self.session.post(url,headers=headers,data=data).text
+      return self.session.post(url.replace("$baseurl$",self._baseUrl),headers=headers,data=data).json()
+    return self.session.post(url.replace("$baseurl$",self._baseUrl),headers=headers,data=data).text
   def user(self):
     """
     Get live data from /minigames/user/info instead of cached .me property

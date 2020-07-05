@@ -18,7 +18,7 @@ pip install -U git+https://github.com/seanwlk/wfaccountmanager # Live updated li
 
 ## Usage
 
-Upon object declaration you have to specify the region you will use tha account from. At the current time the only one supported are `west`,`steam`,`russia`. 
+Upon object declaration you have to specify the region you will use tha account from. At the current time the only one supported are `west`,`steam`,`russia`.
 Then you can login with the credentials. You can also specify `lang` parameter which by default is `en`.
 
 ```python
@@ -61,7 +61,7 @@ wf.postSteam2FA("ASB1G") # Setting the 2FA gotten on the app, via mail or captch
 
 When using steam with the `login()` method the returned data will contain a `steam` key with inside the `steamID` the `auth_token` and `steamguard_token` which will allow you to login in a future session without user and password but by passing those parameters only.
 ```python
-wf.login(steamID="Your Steam OPENID",auth_token=token,steamguard_token=steamguard) 
+wf.login(steamID="Your Steam OPENID",auth_token=token,steamguard_token=steamguard)
 ```
 - <>.user()
 Returns the live data from /minigames/user/info useful to check if session expired for some reason.
@@ -81,6 +81,24 @@ wf.user() # Returns content from /minigames/user/info
     }
 }
 ```
+- <>.get(url,headers=None,data=None,isJson=True)
+With this you can HTTP GET custom URLs using the Warface session. You can pass headers and data which by default are not set.
+Furthermore you can return the output as plain text if you set `isJson=False` which is true by default.
+This method also includes a hidden shortcut that allows you to pass an URL string contraining `$baseurl$` and it will replace it with the actual instance baseUrl
+```
+wf.get("https://pc.warface.com/minigames/battlepass/task/all")
+wf.get("https://$baseurl$/minigames/battlepass/task/all")
+wf.get("https://pc.warface.com/en/profile/", isJson=False)
+```
+- <>.post(url,headers=None,data=None,isJson=True)
+With this you can HTTP POST custom URLs using the Warface session. You can pass headers and data which by default are not set.
+Furthermore you can return the output as plain text if you set `isJson=False` which is true by default.
+This method also includes a hidden shortcut that allows you to pass an URL string contraining `$baseurl$` and it will replace it with the actual instance baseUrl
+```
+wf.get("https://pc.warface.com/minigames/battlepass/box/open")
+wf.get("https://$baseurl$/minigames/battlepass/box/open")
+```
+
 ## Managers
 With version 0.0.3 the service manager sub classes were introduced. This is a cleaner way of using the library and it allows the user to call specific methods for a particular service instead of having way too many methods on the main class.
 ### <>.inventory
