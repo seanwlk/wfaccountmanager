@@ -88,7 +88,7 @@ wf.user() # Returns content from /minigames/user/info
 With this you can HTTP GET custom URLs using the Warface session. You can pass headers and data which by default are not set.
 Furthermore you can return the output as plain text if you set `isJson=False` which is true by default.
 This method also includes a hidden shortcut that allows you to pass an URL string contraining `$baseurl$` and it will replace it with the actual instance baseUrl
-```
+```python
 wf.get("https://pc.warface.com/minigames/battlepass/task/all")
 wf.get("https://$baseurl$/minigames/battlepass/task/all")
 wf.get("https://pc.warface.com/en/profile/", isJson=False)
@@ -98,9 +98,9 @@ wf.get("https://pc.warface.com/en/profile/", isJson=False)
 With this you can HTTP POST custom URLs using the Warface session. You can pass headers and data which by default are not set.
 Furthermore you can return the output as plain text if you set `isJson=False` which is true by default.
 This method also includes a hidden shortcut that allows you to pass an URL string contraining `$baseurl$` and it will replace it with the actual instance baseUrl
-```
-wf.get("https://pc.warface.com/minigames/battlepass/box/open")
-wf.get("https://$baseurl$/minigames/battlepass/box/open")
+```python
+wf.post("https://pc.warface.com/minigames/battlepass/box/open")
+wf.post("https://$baseurl$/minigames/battlepass/box/open")
 ```
 
 ## Managers
@@ -168,13 +168,13 @@ wf.crafting.crates()
 - <>.crafting.startCrate(crate_id)
 
 Method that starts the crafting crate opening
-```
+```python
 wf.crafting.startCrate(982645)
 ```
 - <>.crafting.openCrate(crate_id)
 
 Method that collects items from an opened crate
-```
+```python
 wf.crafting.openCrate(982645)
 # Example output
 {"data":{"resource":{"level":1,"amount":30}},"state":"Success"}
@@ -182,7 +182,7 @@ wf.crafting.openCrate(982645)
 - <>.crafting.resources()
 
 Method that returns list of user crafting resources
-```
+```python
 wf.crafting.resources()
 # Example output
 [
@@ -211,7 +211,7 @@ wf.crafting.resources()
 - <>.crafting.slotCount()
 
 Method that returns the amount of crafting slots the user has
-```
+```python
 wf.crafting.slotCount()
 # Example output
 8
@@ -220,51 +220,51 @@ wf.crafting.slotCount()
 - <>.marketplace.list()
 
 Method that returns the list of items in the marketplace
-```
+```python
 wf.marketplace.list()
 ```
 - <>.marketplace.buy(entity_id, cost, type)
 
 Method that allows to buy items from marketplace. Arguments are available in <>.marketplace.list()
 Most items have type = "inventory
-```
+```python
 wf.marketplace.buy(612, 40, "inventory")
 ```
 - <>.marketplace.sell(item_id, cost, type)
 
 Method that allows to sell in the marketplace. Arguments are available in <>.inventory.list()
-```
+```python
 wf.marketplace.sell(612, 40)
 ```
 - <>.marketplace.myOffers()
 
 Method that returns the list of items that the user is currently selling
-```
+```python
 wf.marketplace.myOffers()
 ```
 - <>.marketplace.history()
 
 Method that returns the selling/buying history of the user
-```
+```python
 wf.marketplace.history()
 ```
 ### <>.chests
 - <>.chests.list()
 
 Method that returns the list of chests available for the user
-```
+```python
 wf.chests.list()
 ```
 - <>.chests.keys()
 
 Method that returns the dict of key chests owned by the user. Key is chest_id, value is the amount of keys for that chest.
-```
+```python
 wf.chests.keys()
 ```
 - <>.chests.open(chest_id)
 
 Method that opens user chests given the chest_id and returns the content of it.
-```
+```python
 wf.chests.open(10)
 # Example output
 {
@@ -288,7 +288,7 @@ wf.chests.open(10)
 - <>.me
 
 It's basically the cached version of `<>.user()` to quickly access nickname and email.
-```
+```python
 wf.me
 # Example output
 {
