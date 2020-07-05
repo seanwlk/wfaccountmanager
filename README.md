@@ -13,7 +13,7 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install wfaccou
 
 ```bash
 pip install wfaccountmanager
-pip install git+https://github.com/seanwlk/wfaccountmanager # Live updated library
+pip install -U git+https://github.com/seanwlk/wfaccountmanager # Live updated library
 ```
 
 ## Usage
@@ -81,22 +81,159 @@ wf.user() # Returns content from /minigames/user/info
     }
 }
 ```
-- <>.inventory()
-Native API that returns the content of the user battlepass inventory. It also has information of the user characters in other servers.
+## Managers
+With version 0.0.3 the service manager sub classes were introduced. This is a cleaner way of using the library and it allows the user to call specific methods for a particular service instead of having way too many methods on the main class.
+### <>.inventory
+Inventory management class that implements the needed methods.
+- <>.inventory.list()
+Native API that returns the content of the user battlepass inventory.
 ```python
-wf.inventory() # Returns content from /minigames/inventory/api/list
+wf.inventory.list() # Returns content from /minigames/inventory/api/list ['data']['inventory']
 ```
-- <>.listCrates()
-Native API that returns crafting information such as available crates, crafting resources and crafting items available
+- <>.inventory.chars()
+Native API that returns list of user in-game characters to which you can transfer items. Useful for <>.inventory.transfer() method
 ```python
-wf.listCrates() # Returns content from /minigames/craft/api/user-info
+wf.inventory.chars() # Returns content from /minigames/craft/api/user-info ['data']['chars']
 ```
-- <>.startCraftCrate(chest_id) and <>.openCraftCrate(chest_id)
-
-Both these methods are used to manage the crafting crates. The first initiates the crate opening. When it's ready you can open it with the secodn method. The `chest_id` is given in `<>.listCrates()`.
+- <>.inventory.transfer(server, item_id, amount=1, notification=False)
+Method that allows the user to transfer items from the battlepass invetory to the game. Takes as arguments the server shardID (available from `<>.inventory.chars()`) and item ID (available from `<>.inventory.list()`). By default the amount is set to 1 and item will be transferred without in-game notification.
 ```python
-wf.startCraftCrate(7694963) # Returns actual http response from server
-wf.openCraftCrate(7694963) # Returns actual http response from server with chest content
+wf.inventory.transfer(1,6025) # Transfers 1 temporary golden scar H to server 1 which in my case it's EU
+```
+- <>.inventory.lootDogToken()
+Method that returns lootdog token. Probably for future use. Currenlty is blank.
+```python
+wf.inventory.lootDogToken()
+```
+### <>.crafting
+- <>.crafting.crates()
+Returns the list of user crafting crates either awaiting to be opened or to be opened/collected.
+```python
+wf.crafting.crates()
+# Example output
+[
+    {
+    "id": 48653619,
+    "type": "silver",
+    "state": "awaiting",
+    "ended_at": -756216
+    },
+    {
+    "id": 48654021,
+    "type": "platinum",
+    "state": "awaiting",
+    "ended_at": -698615
+    },
+    {
+    "id": 48654439,
+    "type": "silver",
+    "state": "awaiting",
+    "ended_at": -756215
+    },
+    {
+    "id": 48657667,
+    "type": "silver",
+    "state": "awaiting",
+    "ended_at": -756215
+    }
+]
+```
+- <>.crafting.startCrate(crate_id)
+Method that starts the crafting crate opening
+```
+wf.crafting.startCrate(982645)
+```
+- <>.crafting.openCrate(crate_id)
+Method that collects items from an opened crate
+```
+wf.crafting.openCrate(982645)
+# Example output
+{"data":{"resource":{"level":1,"amount":30}},"state":"Success"}
+```
+- <>.crafting.resources()
+Method that returns list of user crafting resources
+```
+wf.crafting.resources()
+# Example output
+[
+{
+"level": 1,
+"amount": 14714
+},
+{
+"level": 2,
+"amount": 23913
+},
+{
+"level": 3,
+"amount": 10776
+},
+{
+"level": 4,
+"amount": 666
+},
+{
+"level": 5,
+"amount": 121
+}
+]
+```
+- <>.crafting.slotCount()
+Method that returns the amount of crafting slots the user has
+```
+wf.crafting.slotCount()
+# Example output
+8
+```
+### <>.marketplace
+- <>.marketplace.list()
+Method that returns the list of items in the marketplace
+```
+wf.marketplace.buy()
+```
+- <>.marketplace.buy(entity_id, cost, type)
+Method that allows to buy items from marketplace. Arguments are available in <>.marketplace.list()
+Most items have type = "inventory
+```
+wf.marketplace.buy(612, 40, "inventory")
+```
+- <>.marketplace.sell(item_id, cost, type)
+Method that allows to sell in the marketplace. Arguments are available in <>.inventory.list()
+```
+wf.marketplace.sell(612, 40)
+```
+### <>.chests
+- <>.chests.list()
+Method that returns the list of chests available for the user
+```
+wf.chests.list()
+```
+- <>.chests.keys()
+Method that returns the dict of key chests owned by the user. Key is chest_id, value is the amount of keys for that chest.
+```
+wf.chests.keys()
+```
+- <>.chests.open(chest_id)
+Method that opens user chests given the chest_id and returns the content of it.
+```
+wf.chests.open(10)
+# Example output
+{
+  "data": {
+    "chests": [],
+    "prize": {
+      "type": "game_item",
+      "value": {
+        "id": "ar30_shop",
+        "count": 1,
+        "duration_type": "hour",
+        "duration": 1
+      },
+      "name": "FN FAL DSA-58"
+    }
+  },
+  "state": "Success"
+}
 ```
 ## Properties
 - <>.me

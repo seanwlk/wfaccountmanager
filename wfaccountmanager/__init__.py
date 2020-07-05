@@ -27,11 +27,17 @@ class WFAccountManager:
     - region: russia,west,steam
     - lang: en,fr,cn,es,de,ru
     """
+    # Properties
     self.session = requests.Session()
     self.lang = lang
     self.region = region.lower()
     self.me = {'state': 'guest', 'user_id': None, 'email': '', 'username': '', 'territory': ''}
     self._baseUrl = ""
+    # Child Classes
+    self.crafting = _CraftingManager(self)
+    self.inventory = _InventoryManager(self)
+    self.marketplace = _MarketplaceManager(self)
+    self.chests = _ChestManager(self)
   def login(self,account=None,password=None,**kwargs):
     def _west(account,password):
       """
@@ -370,23 +376,120 @@ class WFAccountManager:
     Get live data from /minigames/user/info instead of cached .me property
     """
     return self.session.get(f'https://{self._baseUrl}/minigames/user/info').json()
-  def inventory(self):
+
+class _CraftingManager:
+  def __init__(self, accountManager):
+    self.accountManager = accountManager
+  def crates(self):
     """
-    Method that returns user inventory in services tab
+    Method that returns list of user crafting chests
     """
-    return self.session.get(f'https://{self._baseUrl}/minigames/inventory/api/list').json()
-  def listCrates(self):
-    """
-    Method that returns user crafting informations such as resources crates and craft items
-    """
-    return self.session.get(f'https://{self._baseUrl}/minigames/craft/api/user-info').json()
-  def startCraftCrate(self, chest_id: int):
+    return self.accountManager.get(f'https://{self.accountManager._baseUrl}/minigames/craft/api/user-info')['data']['user_chests']
+  def startCrate(self, chest_id):
     """
     Method that starts the crafting crate opening
     """
-    return self.session.post(f'https://{self._baseUrl}/minigames/craft/api/start',data={'chest_id':chest_id}).json()
-  def openCraftCrate(self, chest_id: int):
+    return self.accountManager.post(f'https://{self.accountManager._baseUrl}/minigames/craft/api/start',data={'chest_id':int(chest_id)})
+  def openCrate(self, chest_id):
     """
     Method that collects items from an opened crate
     """
-    return self.session.post(f'https://{self._baseUrl}/minigames/craft/api/open',data={'chest_id':chest_id,'paid':0}).json()
+    return self.accountManager.post(f'https://{self.accountManager._baseUrl}/minigames/craft/api/open',data={'chest_id':int(chest_id),'paid':0})
+  def resources(self):
+    """
+    Method that returns list of user crafting resources
+    """
+    return self.accountManager.get(f'https://{self.accountManager._baseUrl}/minigames/craft/api/user-info')['data']['user_resources']
+  def slotCount(self):
+    """
+    Method that returns the amount of crafting slots the user has
+    """
+    return self.accountManager.get(f'https://{self.accountManager._baseUrl}/minigames/craft/api/user-info')['data']['user_slots_count']
+
+class _InventoryManager:
+  def __init__(self, accountManager):
+    self.accountManager = accountManager
+  def list(self):
+    """
+    Method that returns list of user inventory items from battlepass services
+    """
+    return self.accountManager.get(f'https://{self.accountManager._baseUrl}/minigames/inventory/api/list')['data']['inventory']
+  def chars(self):
+    """
+    Method that returns list of user in-game characters to which you can transfer items
+    Useful for <>.inventory.transfer() method
+    """
+    return self.accountManager.get(f'https://{self.accountManager._baseUrl}/minigames/inventory/api/list')['data']['chars']
+  def transfer(self, server, item_id, amount=1, notification=False):
+    """
+    Method that allows the user to transfer items from the battlepass invetory to the game
+    Takes as arguments the server shardID and item ID available from <>.inventory.list()
+    By default the amount is set to 1 and item will be transferred without in-game notification
+    """
+    data = {
+      'shardId': server,
+      'count': amount,
+      'itemId': item_id,
+      'is_notice' : 1 if notification else 0
+    }
+    return self.accountManager.post(f'https://{self.accountManager._baseUrl}/minigames/inventory/api/pass-to-game',data=data)
+  def lootDogToken(self):
+    """
+    Method that returns lootdog token
+    Probably for future use. Currenlty is blank.
+    """
+    return self.accountManager.get(f'https://{self.accountManager._baseUrl}/minigames/inventory/api/list')['data']['lootdog_token']
+
+class _MarketplaceManager:
+  def __init__(self, accountManager):
+    self.accountManager = accountManager
+  def list(self):
+    """
+    Method that returns the list of items in the marketplace
+    """
+    return self.accountManager.get(f'https://{self.accountManager._baseUrl}/minigames/marketplace/api/all')['data']
+  def buy(self, entity_id, cost, type):
+    """
+    Method that allows to buy items from marketplace
+    Arguments are available in <>.marketplace.list()
+    """
+    data = {
+      'entity_id': entity_id,
+      'cost': cost,
+      'type' : type
+    }
+    return self.accountManager.post(f'https://{self.accountManager._baseUrl}/minigames/marketplace/api/buy',data=data)
+  def sell(self,item_id,cost):
+    """
+    Method that allows to sell in the marketplace
+    Arguments are available in <>.inventory.list()
+    """
+    data = {
+      'item_id': item_id,
+      'cost': cost
+    }
+    return self.accountManager.post(f'https://{self.accountManager._baseUrl}/minigames/inventory/api/sale',data=data)
+
+class _ChestManager:
+  def __init__(self, accountManager):
+    self.accountManager = accountManager
+  def list(self):
+    """
+    Method that returns the list of chests available for the user
+    """
+    return self.accountManager.get(f'https://{self.accountManager._baseUrl}/minigames/chest_boxes/api/get-chests')['data']
+  def keys(self):
+    """
+    Method that returns the dict of key chests owned by the user
+    """
+    keys = {}
+    r = self.accountManager.get(f'https://{self.accountManager._baseUrl}/minigames/chest_boxes/api/get-chests')['data']
+    for chest in r:
+      if 'key' in r[chest]:
+        keys[r[chest]['id']] = r[chest]['key']['count']
+    return keys
+  def open(self, chest_id):
+    """
+    Method that opens user chests given the chest_id and returns the content of it
+    """
+    return self.accountManager.post(f'https://{self.accountManager._baseUrl}/minigames/chest_boxes/api/open-chest',data={'id':chest_id})

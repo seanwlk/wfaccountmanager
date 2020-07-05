@@ -14,7 +14,7 @@ Full documentation available here: https://github.com/seanwlk/wfaccountmanager
 
 setuptools.setup(
   name="wfaccountmanager",
-  version="0.0.2",
+  version="0.0.3",
   author="seanwlk",
   author_email="seanwlk@my.com",
   description="Python Wrapper library for Warface that allows you to login and manage data",
