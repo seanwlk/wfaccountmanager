@@ -30,6 +30,7 @@ wf.login(account,password)
 ### Methods
 
 - <>.login()
+
 This method has different behaviour if you are using steam instead of west or russia.
 ```python
 # For west and russia
@@ -64,6 +65,7 @@ When using steam with the `login()` method the returned data will contain a `ste
 wf.login(steamID="Your Steam OPENID",auth_token=token,steamguard_token=steamguard)
 ```
 - <>.user()
+
 Returns the live data from /minigames/user/info useful to check if session expired for some reason.
 ```python
 wf.user() # Returns content from /minigames/user/info
@@ -82,6 +84,7 @@ wf.user() # Returns content from /minigames/user/info
 }
 ```
 - <>.get(url,headers=None,data=None,isJson=True)
+
 With this you can HTTP GET custom URLs using the Warface session. You can pass headers and data which by default are not set.
 Furthermore you can return the output as plain text if you set `isJson=False` which is true by default.
 This method also includes a hidden shortcut that allows you to pass an URL string contraining `$baseurl$` and it will replace it with the actual instance baseUrl
@@ -91,6 +94,7 @@ wf.get("https://$baseurl$/minigames/battlepass/task/all")
 wf.get("https://pc.warface.com/en/profile/", isJson=False)
 ```
 - <>.post(url,headers=None,data=None,isJson=True)
+
 With this you can HTTP POST custom URLs using the Warface session. You can pass headers and data which by default are not set.
 Furthermore you can return the output as plain text if you set `isJson=False` which is true by default.
 This method also includes a hidden shortcut that allows you to pass an URL string contraining `$baseurl$` and it will replace it with the actual instance baseUrl
@@ -104,27 +108,32 @@ With version 0.0.3 the service manager sub classes were introduced. This is a cl
 ### <>.inventory
 Inventory management class that implements the needed methods.
 - <>.inventory.list()
+
 Native API that returns the content of the user battlepass inventory.
 ```python
 wf.inventory.list() # Returns content from /minigames/inventory/api/list ['data']['inventory']
 ```
 - <>.inventory.chars()
+
 Native API that returns list of user in-game characters to which you can transfer items. Useful for <>.inventory.transfer() method
 ```python
 wf.inventory.chars() # Returns content from /minigames/craft/api/user-info ['data']['chars']
 ```
 - <>.inventory.transfer(server, item_id, amount=1, notification=False)
+
 Method that allows the user to transfer items from the battlepass invetory to the game. Takes as arguments the server shardID (available from `<>.inventory.chars()`) and item ID (available from `<>.inventory.list()`). By default the amount is set to 1 and item will be transferred without in-game notification.
 ```python
 wf.inventory.transfer(1,6025) # Transfers 1 temporary golden scar H to server 1 which in my case it's EU
 ```
 - <>.inventory.lootDogToken()
+
 Method that returns lootdog token. Probably for future use. Currenlty is blank.
 ```python
 wf.inventory.lootDogToken()
 ```
 ### <>.crafting
 - <>.crafting.crates()
+
 Returns the list of user crafting crates either awaiting to be opened or to be opened/collected.
 ```python
 wf.crafting.crates()
@@ -157,11 +166,13 @@ wf.crafting.crates()
 ]
 ```
 - <>.crafting.startCrate(crate_id)
+
 Method that starts the crafting crate opening
 ```
 wf.crafting.startCrate(982645)
 ```
 - <>.crafting.openCrate(crate_id)
+
 Method that collects items from an opened crate
 ```
 wf.crafting.openCrate(982645)
@@ -169,6 +180,7 @@ wf.crafting.openCrate(982645)
 {"data":{"resource":{"level":1,"amount":30}},"state":"Success"}
 ```
 - <>.crafting.resources()
+
 Method that returns list of user crafting resources
 ```
 wf.crafting.resources()
@@ -197,6 +209,7 @@ wf.crafting.resources()
 ]
 ```
 - <>.crafting.slotCount()
+
 Method that returns the amount of crafting slots the user has
 ```
 wf.crafting.slotCount()
@@ -205,33 +218,39 @@ wf.crafting.slotCount()
 ```
 ### <>.marketplace
 - <>.marketplace.list()
+
 Method that returns the list of items in the marketplace
 ```
 wf.marketplace.buy()
 ```
 - <>.marketplace.buy(entity_id, cost, type)
+
 Method that allows to buy items from marketplace. Arguments are available in <>.marketplace.list()
 Most items have type = "inventory
 ```
 wf.marketplace.buy(612, 40, "inventory")
 ```
 - <>.marketplace.sell(item_id, cost, type)
+
 Method that allows to sell in the marketplace. Arguments are available in <>.inventory.list()
 ```
 wf.marketplace.sell(612, 40)
 ```
 ### <>.chests
 - <>.chests.list()
+
 Method that returns the list of chests available for the user
 ```
 wf.chests.list()
 ```
 - <>.chests.keys()
+
 Method that returns the dict of key chests owned by the user. Key is chest_id, value is the amount of keys for that chest.
 ```
 wf.chests.keys()
 ```
 - <>.chests.open(chest_id)
+
 Method that opens user chests given the chest_id and returns the content of it.
 ```
 wf.chests.open(10)
@@ -255,6 +274,7 @@ wf.chests.open(10)
 ```
 ## Properties
 - <>.me
+
 It's basically the cached version of `<>.user()` to quickly access nickname and email.
 ```
 wf.me
