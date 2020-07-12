@@ -52,15 +52,17 @@ wf.login(account,password) # Returns content from /minigames/user/info
 Steam `login()` method will return a status code requiring you to put a 2FA code. Here's how to:
 ```python
 myLogin = wf.login("foobar","bestSniperEU") # Steam account
-# {"status" : "Captcha Required", "url" : "capthca URL to resolve"}
-# {"status" : "Email code Required"}
-# {"status" : "Steamguard 2FA Required"}
+# {"status" : 0, "message" : "No 2FA required. Check user session"} this will happen to users with no security setup
+# {"status" : 1, "message" : "Captcha Required", "url" : "capthca URL to resolve"}
+# {"status" : 2, "message" : "Email code Required"}
+# {"status" : 3, "message" : "Steamguard 2FA Required"}
 
 wf.postSteam2FA("ASB1G") # Setting the 2FA gotten on the app, via mail or captcha
 # returns /minigames/user/info
 ```
 
 When using steam with the `login()` method the returned data will contain a `steam` key with inside the `steamID` the `auth_token` and `steamguard_token` which will allow you to login in a future session without user and password but by passing those parameters only.
+Note that if the Oauth2 keys are expired, the method will implicitly return an empty session.
 ```python
 wf.login(steamID="Your Steam OPENID",auth_token=token,steamguard_token=steamguard)
 ```
