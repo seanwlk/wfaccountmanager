@@ -299,6 +299,11 @@ class WFAccountManager:
     """
     Aliased internal function for steam auth. If used with plain username and password
     returns dict with a status request for 2FA when required. Use <>.postSteam2FA() after
+    Possible statuses:
+    0 - No 2FA required - Plain login, you can now use session
+    1 - Captcha required - Post the captcha code
+    2 - Email code required - Post the code received on the email
+    3 - Steamguard 2FA required - Post the 2FA code from steamguard
     """
     if account and password:
       if not 'sessionid' in self.session.cookies.get_dict():
@@ -306,16 +311,17 @@ class WFAccountManager:
         try:
           self.steamUser.login()
           self.session.cookies.update(self.steamUser.session.cookies)
-          return self._steamSiteLogin()
+          self._steamSiteLogin()
+          return {"status" : 0, "message" : "No 2FA required. Check user session"}
         except wa.CaptchaRequired:
           self.twofaType = "captcha"
-          return {"status" : "Captcha Required", "url" : self.steamUser.captcha_url} # User must .postSteam2FA(code)
+          return {"status" : 1, "message" : "Captcha Required", "url" : self.steamUser.captcha_url} # User must .postSteam2FA(code)
         except wa.EmailCodeRequired:
           self.twofaType = "email"
-          return {"status" : "Email code Required"} # User must .postSteam2FA(code)
+          return {"status" : 2, "message" : "Email code Required"} # User must .postSteam2FA(code)
         except wa.TwoFactorCodeRequired:
           self.twofaType = "steamguard"
-          return {"status" : "Steamguard 2FA Required"} # User must .postSteam2FA(code)
+          return {"status" : 3, "message" : "Steamguard 2FA Required"} # User must .postSteam2FA(code)
     elif steamID and auth_token and steamguard_token:
       steamid = sid.SteamID(steamID)
       try:
