@@ -318,7 +318,10 @@ class WFAccountManager:
           return {"status" : "Steamguard 2FA Required"} # User must .postSteam2FA(code)
     elif steamID and auth_token and steamguard_token:
       steamid = sid.SteamID(steamID)
-      response = self.session.post('https://api.steampowered.com/IMobileAuthService/GetWGToken/v1/', data={'access_token': auth_token}).json()['response']
+      try:
+        response = self.session.post('https://api.steampowered.com/IMobileAuthService/GetWGToken/v1/', data={'access_token': auth_token}).json()['response']
+      except:
+        return self._steamSiteLogin()
       if not 'token' in response or not 'token_secure' in response:
         return False
       cookies = {
