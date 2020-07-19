@@ -183,7 +183,6 @@ class WFAccountManager:
         userInfo = self.session.get('https://ru.warface.com/minigames/user/info').json()
         self.session.cookies['mg_token'] = userInfo['data']['token']
         self.session.cookies['cur_language'] = self.lang
-        userInfo = self.session.get('https://ru.warface.com/minigames/user/info').json()
         self.me = {k: v for k, v in userInfo['data'].items() if k != 'token' and k != 'project'}
         self._baseUrl = "ru.warface.com"
         return userInfo
@@ -490,7 +489,7 @@ class _MarketplaceManager:
     Method that returns the selling/buying history of the user
     """
     return self.accountManager.get(f'https://{self.accountManager._baseUrl}/minigames/marketplace/api/history')['data']
-  
+
 
 class _ChestManager:
   def __init__(self, accountManager):
