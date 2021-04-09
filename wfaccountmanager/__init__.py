@@ -308,6 +308,33 @@ class WFAccountManager:
         self.session.headers.update({'referer': entrance.url})
         steam_redir=self.session.post('https://steamcommunity.com/openid/login', data=openid_login)
         self.session.get('https://auth-ac.my.games/sdc?from=https%3A%2F%2Faccount.my.games%2Foauth2%2F%3Fredirect_uri%3Dhttps%253A%252F%252Fpc.warface.com%252Fdynamic%252Fauth%252F%253Fo2%253D1%26client_id%3Dwf.my.com%26response_type%3Dcode%26signup_method%3Demail%2Cphone%26signup_social%3Dmailru%252Cfb%252Cvk%252Cg%252Cok%252Ctwitch%252Ctw%252Cps%252Cxbox%252Csteam%26lang%3Den_US%26signup%3D1')
+        g = self.session.get("https://account.my.games/profile/userinfo/",allow_redirects=False).text
+        _csrfMiddlewareToken = g.split("name=\"csrfmiddlewaretoken\" value=\"")[1].split('"')[0]
+        data = {
+          'csrfmiddlewaretoken': _csrfMiddlewareToken,
+          'response_type': 'code',
+          'client_id': 'wf.my.com',
+          'redirect_uri': 'https://pc.warface.com/dynamic/auth/?o2=1',
+          'scope': '',
+          'state': '',
+          'hash': 'b4f287b95aa4dbc907ab2880c60012b3',
+          'gc_id': None,
+          'force': '1'
+        }
+        payload = {
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+          'Sec-Fetch-Site': 'same-origin',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-User': '?1',
+          'Sec-Fetch-Dest': 'document',
+          'Origin': 'https://account.my.games',
+          'Referer': 'https://account.my.games/oauth2/?redirect_uri=https%3A%2F%2Fru.warface.com%2Fdynamic%2Fauth%2F%3Fo2%3D1&client_id=ru.warface.com&response_type=code&signup_method=email%2Cphone&signup_social=mailru%2Cfb%2Cvk%2Cg%2Cok%2Ctwitch%2Ctw&lang=ru_RU&gc_id=0.1177',
+          'Accept-Language': 'en-US,en;q=0.9,it-IT;q=0.8,it;q=0.7',
+          'Upgrade-Insecure-Requests': '1',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
+        }
+        r = self.session.post("https://account.my.games/oauth2/",headers=payload,data=data)
         userInfo = self.session.get('https://pc.warface.com/minigames/user/info').json()
         self.session.cookies['mg_token'] = userInfo['data']['token']
         self.session.cookies['cur_language'] = self.lang
