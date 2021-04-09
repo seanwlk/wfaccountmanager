@@ -46,38 +46,67 @@ class WFAccountManager:
       Returns: content from /minigames/user/info
       """
       payload = {
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
         'Accept-Encoding': 'gzip, deflate, br',
-        'Accept-Language': 'en-US,en;q=0.9,it-IT;q=0.8,it;q=0.7',
-        'Connection': 'keep-alive',
+        'Accept-Language': 'en-US,en;q=0.9,it;q=0.8',
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Cookie':'amc_lang=en_US; ',
         'DNT': '1',
+        'Cookie': 'amc_lang=en_US;',
         'Host': 'auth-ac.my.games',
         'Origin': 'https://account.my.games',
-        'Referer': 'https://account.my.games/oauth2/login/?continue=https%3A%2F%2Faccount.my.games%2Foauth2%2F%3Fredirect_uri%3Dhttps%253A%252F%252Fpc.warface.com%252Fdynamic%252Fauth%252F%253Fo2%253D1%26client_id%3Dwf.my.com%26response_type%3Dcode%26signup_method%3Demail%2Cphone%26signup_social%3Dmailru%252Cfb%252Cvk%252Cg%252Cok%252Ctwitch%252Ctw%252Cps%252Cxbox%252Csteam%26lang%3Den_US&client_id=wf.my.com&lang=en_US&signup_method=email%2Cphone&signup_social=mailru%2Cfb%2Cvk%2Cg%2Cok%2Ctwitch%2Ctw%2Cps%2Cxbox%2Csteam',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
-        }
+        'Referer': 'https://account.my.games/',
+        'sec-ch-ua': '"Google Chrome";v="89", "Chromium";v="89", ";Not A Brand";v="99"',
+        'sec-ch-ua-mobile': '?0',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'same-site',
+        'Sec-Fetch-User': '?1',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'
+      }
       login_data = {
         'email':account,
         'password':password,
-        'continue':'https://account.my.games/oauth2/?redirect_uri=https%3A%2F%2Fpc.warface.com%2Fdynamic%2Fauth%2F%3Fo2%3D1&client_id=wf.my.com&response_type=code&signup_method=email,phone&signup_social=mailru%2Cfb%2Cvk%2Cg%2Cok%2Ctwitch%2Ctw%2Cps%2Cxbox%2Csteam&lang=en_US',
-        'failure':'https://account.my.games/oauth2/login/?continue=https%3A%2F%2Faccount.my.games%2Foauth2%2Flogin%2F%3Fcontinue%3Dhttps%253A%252F%252Faccount.my.games%252Foauth2%252F%253Fredirect_uri%253Dhttps%25253A%25252F%25252Fpc.warface.com%25252Fdynamic%25252Fauth%25252F%25253Fo2%25253D1%2526client_id%253Dwf.my.com%2526response_type%253Dcode%2526signup_method%253Demail%252Cphone%2526signup_social%253Dmailru%25252Cfb%25252Cvk%25252Cg%25252Cok%25252Ctwitch%25252Ctw%25252Cps%25252Cxbox%25252Csteam%2526lang%253Den_US%26client_id%3Dwf.my.com%26lang%3Den_US%26signup_method%3Demail%252Cphone%26signup_social%3Dmailru%252Cfb%252Cvk%252Cg%252Cok%252Ctwitch%252Ctw%252Cps%252Cxbox%252Csteam&amp;client_id=wf.my.com&amp;lang=en_US&amp;signup_method=email%2Cphone&amp;signup_social=mailru%2Cfb%2Cvk%2Cg%2Cok%2Ctwitch%2Ctw%2Cps%2Cxbox%2Csteam',
-        'nosavelogin':'0'
-        }
+        'continue':'https://account.my.games/oauth2/?redirect_uri=https%3A%2F%2Fpc.warface.com%2Fdynamic%2Fauth%2F%3Fo2%3D1&client_id=wf.my.com&response_type=code&signup_method=email%2Cphone&signup_social=mailru%2Cfb%2Cvk%2Cg%2Cok%2Ctwitch%2Ctw%2Cps%2Cxbox%2Csteam&lang=en_US&gc_id=13.2000076&lang=en_US',
+        'failure':'https://account.my.games/oauth2/login/?continue=https%3A%2F%2Faccount.my.games%2Foauth2%2Flogin%2F%3Fcontinue%3Dhttps%253A%252F%252Faccount.my.games%252Foauth2%252F%253Fredirect_uri%253Dhttps%25253A%25252F%25252Fpc.warface.com%25252Fdynamic%25252Fauth%25252F%25253Fo2%25253D1%2526client_id%253Dwf.my.com%2526response_type%253Dcode%2526signup_method%253Demail%25252Cphone%2526signup_social%253Dmailru%25252Cfb%25252Cvk%25252Cg%25252Cok%25252Ctwitch%25252Ctw%25252Cps%25252Cxbox%25252Csteam%2526lang%253Den_US%2526gc_id%253D13.2000076%2526lang%253Den_US%26client_id%3Dwf.my.com%26lang%3Den_US%26signup_method%3Demail%252Cphone%26signup_social%3Dmailru%252Cfb%252Cvk%252Cg%252Cok%252Ctwitch%252Ctw%252Cps%252Cxbox%252Csteam%26gc_id%3D13.2000076&client_id=wf.my.com&lang=en_US&signup_method=email%2Cphone&signup_social=mailru%2Cfb%2Cvk%2Cg%2Cok%2Ctwitch%2Ctw%2Cps%2Cxbox%2Csteam&gc_id=13.2000076',
+        'nosavelogin':'0',
+        'g-recaptcha-response': None
+      }
+      r = self.session.post('https://auth-ac.my.games/auth',headers=payload, data=login_data, allow_redirects=False)
+      while "location" in r.headers:
+        r = self.session.get(r.headers['location'], allow_redirects=False)
+      g = r.text
       try:
-        r = self.session.post('https://auth-ac.my.games/auth',headers=payload,data=login_data, allow_redirects=False)
-        while "location" in r.headers:
-          """
-          1- Auth redirect to oauth2
-          2- Oauth2 redirect to sdc
-          3- Generates link to get to sdc token
-          4- SDC token redirects to oauth2
-          5- Auth link for pc.warface.com is generated
-          6- GET auth link for session
-          """
-          r = self.session.get(r.headers['location'], allow_redirects=False)
-      except:
+        _csrfMiddlewareToken = g.split("name=\"csrfmiddlewaretoken\" value=\"")[1].split('"')[0]
+        data = {
+          'csrfmiddlewaretoken': _csrfMiddlewareToken,
+          'response_type': 'code',
+          'client_id': 'wf.my.com',
+          'redirect_uri': 'https://pc.warface.com/dynamic/auth/?o2=1',
+          'scope': '',
+          'state': '',
+          'hash': 'b4f287b95aa4dbc907ab2880c60012b3',
+          'gc_id': None,
+          'force': '1'
+        }
+        payload = {
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+          'Sec-Fetch-Site': 'same-origin',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-User': '?1',
+          'Sec-Fetch-Dest': 'document',
+          'Origin': 'https://account.my.games',
+          'Referer': 'https://account.my.games/oauth2/?redirect_uri=https%3A%2F%2Fru.warface.com%2Fdynamic%2Fauth%2F%3Fo2%3D1&client_id=ru.warface.com&response_type=code&signup_method=email%2Cphone&signup_social=mailru%2Cfb%2Cvk%2Cg%2Cok%2Ctwitch%2Ctw&lang=ru_RU&gc_id=0.1177',
+          'Accept-Language': 'en-US,en;q=0.9,it-IT;q=0.8,it;q=0.7',
+          'Upgrade-Insecure-Requests': '1',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
+        }
+        r = self.session.post("https://account.my.games/oauth2/",headers=payload,data=data)
+        userInfo = self.session.get('https://pc.warface.com/minigames/user/info').json() # has to be json implicitly. IT will loop if site is down
+        self.session.cookies['mg_token'] = userInfo['data']['token']
+        self.session.cookies['cur_language'] = self.lang
+      except ValueError:
         pass
       userInfo = self.session.get('https://pc.warface.com/minigames/user/info').json()
       self.session.cookies['mg_token'] = userInfo['data']['token']
