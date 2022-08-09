@@ -29,6 +29,7 @@ class WFAccountManager:
     """
     # Properties
     self.session = requests.Session()
+    self.user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36'
     self.lang = lang
     self.region = region.lower()
     self.me = {'state': 'guest', 'user_id': None, 'email': '', 'username': '', 'territory': ''}
@@ -55,24 +56,18 @@ class WFAccountManager:
         'Host': 'auth-ac.my.games',
         'Origin': 'https://account.my.games',
         'Referer': 'https://account.my.games/',
-        'sec-ch-ua': '"Google Chrome";v="89", "Chromium";v="89", ";Not A Brand";v="99"',
-        'sec-ch-ua-mobile': '?0',
-        'Sec-Fetch-Dest': 'document',
-        'Sec-Fetch-Mode': 'navigate',
-        'Sec-Fetch-Site': 'same-site',
-        'Sec-Fetch-User': '?1',
         'Upgrade-Insecure-Requests': '1',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'
+        'User-Agent': self.user_agent
       }
       login_data = {
-        'email':account,
+        'login':account,
         'password':password,
-        'continue':'https://account.my.games/oauth2/?redirect_uri=https%3A%2F%2Fpc.warface.com%2Fdynamic%2Fauth%2F%3Fo2%3D1&client_id=wf.my.com&response_type=code&signup_method=email%2Cphone&signup_social=mailru%2Cfb%2Cvk%2Cg%2Cok%2Ctwitch%2Ctw%2Cps%2Cxbox%2Csteam&lang=en_US&gc_id=13.2000076&lang=en_US',
-        'failure':'https://account.my.games/oauth2/login/?continue=https%3A%2F%2Faccount.my.games%2Foauth2%2Flogin%2F%3Fcontinue%3Dhttps%253A%252F%252Faccount.my.games%252Foauth2%252F%253Fredirect_uri%253Dhttps%25253A%25252F%25252Fpc.warface.com%25252Fdynamic%25252Fauth%25252F%25253Fo2%25253D1%2526client_id%253Dwf.my.com%2526response_type%253Dcode%2526signup_method%253Demail%25252Cphone%2526signup_social%253Dmailru%25252Cfb%25252Cvk%25252Cg%25252Cok%25252Ctwitch%25252Ctw%25252Cps%25252Cxbox%25252Csteam%2526lang%253Den_US%2526gc_id%253D13.2000076%2526lang%253Den_US%26client_id%3Dwf.my.com%26lang%3Den_US%26signup_method%3Demail%252Cphone%26signup_social%3Dmailru%252Cfb%252Cvk%252Cg%252Cok%252Ctwitch%252Ctw%252Cps%252Cxbox%252Csteam%26gc_id%3D13.2000076&client_id=wf.my.com&lang=en_US&signup_method=email%2Cphone&signup_social=mailru%2Cfb%2Cvk%2Cg%2Cok%2Ctwitch%2Ctw%2Cps%2Cxbox%2Csteam&gc_id=13.2000076',
+        'continue':'https://account.my.games/oauth2/?redirect_uri=https%3A%2F%2Fpc.warface.com%2Fdynamic%2Fauth%2F%3Fo2%3D1&client_id=wf.my.com&response_type=code&signup_method=email%2Cphone&signup_social=mailru%2Cfb%2Cvk%2Cg%2Ctwitch%2Ceg%2Ctw%2Csteam&lang=en_US&gc_id=13.2000076&lang=en_US',
+        'failure':'https://account.my.games/oauth2/login/?continue=https%3A%2F%2Faccount.my.games%2Foauth2%2Flogin%2F%3Fcontinue%3Dhttps%253A%252F%252Faccount.my.games%252Foauth2%252F%253Fredirect_uri%253Dhttps%25253A%25252F%25252Fpc.warface.com%25252Fdynamic%25252Fauth%25252F%25253Fo2%25253D1%2526client_id%253Dwf.my.com%2526response_type%253Dcode%2526signup_method%253Demail%25252Cphone%2526signup_social%253Dmailru%25252Cfb%25252Cvk%25252Cg%25252Ctwitch%25252Ceg%25252Ctw%25252Csteam%2526lang%253Den_US%2526gc_id%253D13.2000076%2526lang%253Den_US%26client_id%3Dwf.my.com%26lang%3Den_US%26signup_method%3Demail%252Cphone%26signup_social%3Dmailru%252Cfb%252Cvk%252Cg%252Ctwitch%252Ceg%252Ctw%252Csteam%26gc_id%3D13.2000076&client_id=wf.my.com&lang=en_US&signup_method=email%2Cphone&signup_social=mailru%2Cfb%2Cvk%2Cg%2Ctwitch%2Ceg%2Ctw%2Csteam&gc_id=13.2000076',
         'nosavelogin':'0',
         'g-recaptcha-response': None
       }
-      r = self.session.post('https://auth-ac.my.games/auth',headers=payload, data=login_data, allow_redirects=False)
+      r = self.session.post('https://auth-ac.my.games/sign_in',headers=payload, data=login_data, allow_redirects=False)
       while "location" in r.headers:
         r = self.session.get(r.headers['location'], allow_redirects=False)
       g = r.text
@@ -96,11 +91,11 @@ class WFAccountManager:
           'Sec-Fetch-User': '?1',
           'Sec-Fetch-Dest': 'document',
           'Origin': 'https://account.my.games',
-          'Referer': 'https://account.my.games/oauth2/?redirect_uri=https%3A%2F%2Fru.warface.com%2Fdynamic%2Fauth%2F%3Fo2%3D1&client_id=ru.warface.com&response_type=code&signup_method=email%2Cphone&signup_social=mailru%2Cfb%2Cvk%2Cg%2Cok%2Ctwitch%2Ctw&lang=ru_RU&gc_id=0.1177',
+          'Referer': 'https://account.my.games/oauth2/?redirect_uri=https%3A%2F%2Fpc.warface.com%2Fdynamic%2Fauth%2F%3Fo2%3D1&client_id=wf.my.com&response_type=code&signup_method=email%2Cphone&signup_social=mailru%2Cfb%2Cvk%2Cg%2Ctwitch%2Ceg%2Ctw%2Csteam&lang=en_US&gc_id=13.2000076&lang=en_US',
           'Accept-Language': 'en-US,en;q=0.9,it-IT;q=0.8,it;q=0.7',
           'Upgrade-Insecure-Requests': '1',
           'Content-Type': 'application/x-www-form-urlencoded',
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
+          'User-Agent': self.user_agent
         }
         r = self.session.post("https://account.my.games/oauth2/",headers=payload,data=data)
         userInfo = self.session.get('https://pc.warface.com/minigames/user/info').json() # has to be json implicitly. IT will loop if site is down
@@ -122,7 +117,7 @@ class WFAccountManager:
       domains = ["mail.ru","inbox.ru","list.ru","bk.ru"]
       if account.split("@")[1] in domains:
         g = self.session.post('https://auth-ac.my.games/social/mailru',allow_redirects=True).text
-        mailru_state = g.split("%2F&state=")[1].split('&')[0]
+        mailru_state = g.split("%2F&state=")[1].split("'")[0] # This sucks
         payload = {
           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
           'Accept-Encoding': 'gzip, deflate, br',
@@ -139,7 +134,7 @@ class WFAccountManager:
           'Sec-Fetch-Site': 'same-site',
           'Sec-Fetch-User': '?1',
           'Upgrade-Insecure-Requests': '1',
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
+          'User-Agent': self.user_agent
         }
         act_token = self.session.get("https://account.mail.ru").cookies['act']
         data = {
@@ -148,7 +143,7 @@ class WFAccountManager:
           'password': password,
           'Password': password,
           'new_auth_form': '1',
-          'FromAccount': 'opener=o2&twoSteps=1',
+          'FromAccount': 'opener=o2&x=login&twoSteps=1&remind_target=_self',
           'act_token': act_token,
           'page': 'https://o2.mail.ru/xlogin?authid=kc6q10mp.x56&client_id=bbddb88d19b84a62aedd1ffbc71af201&force_us=1&from=o2&logo_target=_none&no_biz=1&redirect_uri=https%3A%2F%2Fauth-ac.my.games%2Fsocial%2Fmailru_callback%2F&remind_target=_self&response_type=code&scope=&signup_target=_self',
           'lang': 'en_US'
@@ -178,7 +173,7 @@ class WFAccountManager:
           'sec-fetch-mode': 'navigate',
           'sec-fetch-site': 'same-origin',
           'upgrade-insecure-requests': '1',
-          'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
+          'user-agent': self.user_agent
         }
         r = self.session.post('https://o2.mail.ru/login',headers=payload,data=data)
         self.session.get("https://account.my.games/social_back/?continue=https%3A%2F%2Faccount.my.games%2Foauth2%2F%3Fredirect_uri%3Dhttps%253A%252F%252Fru.warface.com%252Fdynamic%252Fauth%252F%253Fo2%253D1%26client_id%3Dru.warface.com%26response_type%3Dcode%26signup_method%3Demail%252Cphone%26signup_social%3Dmailru%252Cfb%252Cvk%252Cg%252Cok%252Ctwitch%252Ctw%26lang%3Dru_RU%26gc_id%3D0.1177&client_id=ru.warface.com&popup=1",headers=payload)
@@ -206,7 +201,7 @@ class WFAccountManager:
           'Accept-Language': 'en-US,en;q=0.9,it-IT;q=0.8,it;q=0.7',
           'Upgrade-Insecure-Requests': '1',
           'Content-Type': 'application/x-www-form-urlencoded',
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
+          'User-Agent': self.user_agent
         }
         r = self.session.post("https://account.my.games/oauth2/",headers=payload,data=data)
         userInfo = self.session.get('https://ru.warface.com/minigames/user/info').json()
@@ -216,6 +211,7 @@ class WFAccountManager:
         self._baseUrl = "ru.warface.com"
         return userInfo
       else:
+        # My.Games account on ru site
         payload = {
           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
           'Accept-Encoding': 'gzip, deflate, br',
@@ -230,10 +226,10 @@ class WFAccountManager:
           'Sec-Fetch-Mode': 'no-cors',
           'Sec-Fetch-Site': 'same-site',
           'Referer': 'https://account.my.games/oauth2/login/?continue=https%3A%2F%2Faccount.my.games%2Foauth2%2F%3Fredirect_uri%3Dhttps%253A%252F%252Fru.warface.com%252Fdynamic%252Fauth%252F%253Fo2%253D1%26client_id%3Dru.warface.com%26response_type%3Dcode%26signup_method%3Demail%252Cphone%26signup_social%3Dmailru%252Cfb%252Cvk%252Cg%252Cok%252Ctwitch%252Ctw%26lang%3Dru_RU%26gc_id%3D0.1177&client_id=ru.warface.com&lang=ru_RU&signup_method=email%2Cphone&signup_social=mailru%2Cfb%2Cvk%2Cg%2Cok%2Ctwitch%2Ctw&gc_id=0.1177',
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
+          'User-Agent': self.user_agent
         }
         login_data = {
-          'email':account,
+          'login':account,
           'password':password,
           'continue':'https://account.my.games/oauth2/?redirect_uri=https%3A%2F%2Fru.warface.com%2Fdynamic%2Fauth%2F%3Fo2%3D1&client_id=ru.warface.com&response_type=code&signup_method=email%2Cphone&signup_social=mailru%2Cfb%2Cvk%2Cg%2Cok%2Ctwitch%2Ctw&lang=ru_RU&gc_id=0.1177',
           'failure':'https://account.my.games/oauth2/login/?continue=https%3A%2F%2Faccount.my.games%2Foauth2%2Flogin%2F%3Fcontinue%3Dhttps%253A%252F%252Faccount.my.games%252Foauth2%252F%253Fredirect_uri%253Dhttps%25253A%25252F%25252Fru.warface.com%25252Fdynamic%25252Fauth%25252F%25253Fo2%25253D1%2526client_id%253Dru.warface.com%2526response_type%253Dcode%2526signup_method%253Demail%25252Cphone%2526signup_social%253Dmailru%25252Cfb%25252Cvk%25252Cg%25252Cok%25252Ctwitch%25252Ctw%2526lang%253Dru_RU%2526gc_id%253D0.1177%26client_id%3Dru.warface.com%26lang%3Dru_RU%26signup_method%3Demail%252Cphone%26signup_social%3Dmailru%252Cfb%252Cvk%252Cg%252Cok%252Ctwitch%252Ctw%26gc_id%3D0.1177&client_id=ru.warface.com&lang=ru_RU&signup_method=email%2Cphone&signup_social=mailru%2Cfb%2Cvk%2Cg%2Cok%2Ctwitch%2Ctw&gc_id=0.1177',
@@ -241,7 +237,7 @@ class WFAccountManager:
           'g-recaptcha-response': None
         }
         try:
-          r = self.session.post('https://auth-ac.my.games/auth',headers=payload,data=login_data, allow_redirects=False)
+          r = self.session.post('https://auth-ac.my.games/sign_in',headers=payload,data=login_data, allow_redirects=False)
           while "location" in r.headers:
             r = self.session.get(r.headers['location'], allow_redirects=False)
           g = self.session.get("https://account.my.games/profile/userinfo/",allow_redirects=False).text
@@ -268,7 +264,7 @@ class WFAccountManager:
             'Accept-Language': 'en-US,en;q=0.9,it-IT;q=0.8,it;q=0.7',
             'Upgrade-Insecure-Requests': '1',
             'Content-Type': 'application/x-www-form-urlencoded',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
+            'User-Agent': self.user_agent
           }
           r = self.session.post("https://account.my.games/oauth2/",headers=payload,data=data)
           userInfo = self.session.get('https://ru.warface.com/minigames/user/info').json() # has to be json implicitly. IT will loop if site is down
@@ -332,7 +328,7 @@ class WFAccountManager:
           'Accept-Language': 'en-US,en;q=0.9,it-IT;q=0.8,it;q=0.7',
           'Upgrade-Insecure-Requests': '1',
           'Content-Type': 'application/x-www-form-urlencoded',
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
+          'User-Agent': self.user_agent
         }
         r = self.session.post("https://account.my.games/oauth2/",headers=payload,data=data)
         userInfo = self.session.get('https://pc.warface.com/minigames/user/info').json()
