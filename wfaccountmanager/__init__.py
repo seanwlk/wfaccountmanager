@@ -39,6 +39,7 @@ class WFAccountManager:
     self.inventory = _InventoryManager(self)
     self.marketplace = _MarketplaceManager(self)
     self.chests = _ChestManager(self)
+    self.myitems = _MyItemsManager(self)
   def login(self,account=None,password=None,**kwargs):
     def _west(account,password):
       """
@@ -542,7 +543,6 @@ class _MarketplaceManager:
     """
     return self.accountManager.get(f'https://{self.accountManager._baseUrl}/minigames/marketplace/api/history')['data']
 
-
 class _ChestManager:
   def __init__(self, accountManager):
     self.accountManager = accountManager
@@ -566,3 +566,46 @@ class _ChestManager:
     Method that opens user chests given the chest_id and returns the content of it
     """
     return self.accountManager.post(f'https://{self.accountManager._baseUrl}/minigames/chest_boxes/api/open-chest',data={'id':chest_id})
+
+class _MyItemsManager:
+  def __init__(self, accountManager):
+    self.accountManager = accountManager
+    # Cache user profiles as an attribute for easy and fast access
+    self.profiles = []
+  def getUserProfiles(self):
+    """
+    Method that returns user profile and refreshes the cache
+    """
+    r = self.accountManager.get(f'https://{self.accountManager._baseUrl}/dynamic/cart/?a=item_list_json')['user']
+    self.profiles = r # Refresh cache
+    return r
+  def list(self):
+    """
+    Method that returns the list of items available for transfer
+    """
+    l = []
+    r = self.accountManager.get(f'https://{self.accountManager._baseUrl}/dynamic/cart/?a=item_list_json')['items']
+    for category in r:
+      l.extend(r[category])
+    return l
+  def history(self):
+    """
+    Method that returns the list of items already transferred in-game
+    """
+    h = []
+    r = self.accountManager.get(f'https://{self.accountManager._baseUrl}/dynamic/cart/?a=item_list_json')['history']
+    for idx, category in enumerate(r):
+      h.extend(r[idx])
+    return h
+  def transferItem(self, cartId, profileId, shardId, sendNotification = True):
+    """
+    Method that transfers a given item to the given profile
+    """
+    cartId = f"items[{cartId}]"
+    itemData = {
+      'shard_id': shardId,
+      'profile_id': profileId,
+      'notification' : not sendNotification, # Counterintuitive but that's how they do it
+      cartId: 'on'
+    }
+    return self.accountManager.post(f'https://{self.accountManager._baseUrl}/dynamic/cart/?a=item_process', data = itemData)

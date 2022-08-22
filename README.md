@@ -107,8 +107,214 @@ wf.post("https://$baseurl$/minigames/battlepass/box/open")
 
 ## Managers
 With version 0.0.3 the service manager sub classes were introduced. This is a cleaner way of using the library and it allows the user to call specific methods for a particular service instead of having way too many methods on the main class.
+
+### <>.myitems
+My Items manager that allows you to see the available game items for you to transfer and the available game profiles
+- <>.myitems.profiles
+
+Static attribute that gives you the available profiles and shardIds for your account (Only available if `<>.myitems.getUserProfiles()` was called at least once during runtime, else returns an empty list)
+```python
+# Example output
+[
+  {
+    "username": "foobar",
+    "level": 93,
+    "shard": "EU",
+    "shardId": 1,
+    "profileId": "11111"
+  },
+  {
+    "username": "foofoo",
+    "level": 70,
+    "shard": "EU",
+    "shardId": 1,
+    "profileId": "2323232323"
+  }
+]
+```
+- <>.myitems.getUserProfiles()
+
+Returns the same as the static attribute that gives you the available profiles and refreshes its cache
+```python
+# Example output
+[
+  {
+    "username": "foobar",
+    "level": 93,
+    "shard": "EU",
+    "shardId": 1,
+    "profileId": "11111"
+  },
+  {
+    "username": "foofoo",
+    "level": 70,
+    "shard": "EU",
+    "shardId": 1,
+    "profileId": "2323232323"
+  }
+]
+```
+- <>.myitems.list()
+
+Returns the list of items you have available for transfer
+```python
+# Example output, may differ based on item type but the base schema stays the same
+[
+  {
+    "cartid":"1639063",
+    "uid":"14345042",
+    "itemid":"1545",
+    "itemcount":"1",
+    "last_update":"1499935454",
+    "promoid":"156",
+    "tid":"0",
+    "iteminfo":{
+      "id":1545,
+      "title":"Walther P99",
+      "itemid":"pt31_shop",
+      "count":"1",
+      "duration":"7",
+      "duration_type":"day",
+      "consumable":"0",
+      "permanent":"0",
+      "regular":"",
+      "priority":"",
+      "tag":"",
+      "type":"item",
+      "limit":"0"
+    }
+  },
+  {
+    "cartid":"1659295",
+    "uid":"14345042",
+    "itemid":"1557",
+    "itemcount":"1",
+    "last_update":"1499935454",
+    "promoid":"156",
+    "tid":"0",
+    "iteminfo":{
+      "id":1557,
+      "title":"Warlord Boots",
+      "itemid":"shared_shoes_09",
+      "count":"1",
+      "duration":"7",
+      "duration_type":"day",
+      "consumable":"0",
+      "permanent":"0",
+      "regular":"",
+      "priority":"",
+      "tag":"",
+      "type":"item",
+      "limit":"0"
+    }
+  },
+  ...
+}
+```
+- <>.myitems.history()
+
+Returns the list of items you transferred in-game
+```python
+# Example output
+[
+  {
+    "cartid":"29002997",
+    "promoid":"313",
+    "uid":"9999999",
+    "itemid":"8447",
+    "itemcount":"1",
+    "shardid":"1",
+    "status":100,
+    "last_update":"1634142775",
+    "details":"",
+    "charid":"23232323",
+    "send_status":"OK",
+    "send_ts":"1639218962",
+    "promo_name":"Promo \"Origins\"",
+    "iteminfo":{
+      "title":"Armageddon Engineer Helmet",
+      "itemid":"engineer_helmet_armagedon",
+      "count":1,
+      "duration":15,
+      "duration_type":"day",
+      "consumable":0,
+      "permanent":0,
+      "regular":0,
+      "type":"item",
+      "title_fr":"Casque Armageddon pour Ingénieur",
+      "title_de":"Ingenieurshelm Armageddon",
+      "title_pl":"Hełm inżyniera Armageddon",
+      "title_es":"Casco de ingeniero Armagedón",
+      "title_tr":"Kıyamet Mühendis Miğferi",
+      "title_pt":"Capacete de Engenheiro Armagedom",
+      "title_ko":"아마게돈 엔지니어 헬멧",
+      "title_cn":"末日工程师头盔",
+      "title_jp":"エンジニアヘルメット「アルマゲドン」",
+      "id":8447
+    },
+    "charname":"foobar"
+  },
+  {
+    "cartid":"28471329",
+    "promoid":"2",
+    "uid":"9999999",
+    "itemid":"7613",
+    "itemcount":"1",
+    "shardid":"1",
+    "status":100,
+    "last_update":"1626084624",
+    "details":"",
+    "charid":"11111",
+    "send_status":"OK",
+    "send_ts":"1628322603",
+    "promo_name":"Support service",
+    "iteminfo":{
+      "id":7613,
+      "title":"Achievement Fan of Discord",
+      "title_fr":"Réalisation Fan de Discord",
+      "title_de":"Leistung Discord-Fan",
+      "title_pl":"Osiągnięcie Fan Discordu",
+      "title_es":"Achievement Fan of Discord",
+      "title_tr":"Achievement Fan of Discord",
+      "title_pt":"Conquista Fã do Discord",
+      "title_cn":"Achievement Fan of Discord",
+      "title_jp":"@ru_discord_mark_01",
+      "gold":"",
+      "goldeu":"",
+      "goldtur":"",
+      "icon_url":"",
+      "itemid":"unlock_ru_discord_mark_01",
+      "price":"",
+      "item_css_class":"",
+      "type":"item",
+      "count":"1",
+      "duration":"0",
+      "duration_type":"",
+      "consumable":"0",
+      "permanent":"0",
+      "regular":"1",
+      "priority":"",
+      "tag":"",
+      "sale":"",
+      "limit":"0"
+    },
+    "charname":"foohoo"
+  },
+  ...
+}
+```
+- <>.myitems.transferItem(cartId, profileId, shardId, sendNotification = True)
+
+Allows you to transfer items that are listed in the `<>.myitems.list()` result. All the parameters are mandatory except the notifications, you can choose if send them in-game or not.
+```python
+# Example output
+{
+  "result":1,
+  "msg":"Sent to the selected server: Absolute AT308"
+}
+```
 ### <>.inventory
-Inventory management class that implements the needed methods.
+Battlepass inventory management class that implements the needed methods.
 - <>.inventory.list()
 
 Native API that returns the content of the user battlepass inventory.
