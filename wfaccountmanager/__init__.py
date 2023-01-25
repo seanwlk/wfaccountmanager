@@ -115,7 +115,7 @@ class WFAccountManager:
       Warface Ru login
       Has to handle mail ru mailboxes endpoints and the other ones separatly
       """
-      domains = ["mail.ru","inbox.ru","list.ru","bk.ru"]
+      domains = ["mail.ru","inbox.ru","list.ru","bk.ru","internet.ru"]
       if account.split("@")[1] in domains:
         g = self.session.post('https://auth-ac.my.games/social/mailru',allow_redirects=True).text
         mailru_state = g.split("%2F&state=")[1].split("'")[0] # This sucks
